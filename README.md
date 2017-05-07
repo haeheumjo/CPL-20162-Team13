@@ -2,6 +2,7 @@
 종합프로젝트 설계1
 
 #Addressing structures
+
 To establish an RFCOMM connection with another Bluetooth device, incoming or outgoing, create and fill out a struct sockaddr_rc addressing structure. Like the struct sockaddr_in that is used in TCP/IP, the addressing structure specifies the details of an outgoing connection or listening socket.
 
 
