@@ -39,12 +39,14 @@ import java.net.ServerSocket;
              
              OutputStream os = socket.getOutputStream();
              PrintWriter pw = new PrintWriter(os);
-             pw.write("用户名:admin 密码:123\n");
-             pw.flush();
-             pw.write("\nY\n");
-             pw.flush();
+             pw.println("用户名:admin 密码:123");
+            // pw.flush();
+             pw.println("Y");
+            // pw.flush();
              
-             
+             pw.println("3");
+             for(int i = 0; i < 3; i++)
+                pw.println("student "+i);
              
              socket.shutdownInput();//关闭输出流
               
