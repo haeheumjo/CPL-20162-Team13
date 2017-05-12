@@ -45,9 +45,11 @@ import java.net.ServerSocket;
             // pw.flush();
              
              pw.println("3");
-             for(int i = 0; i < 3; i++)
+             pw.flush();
+             for(int i = 0; i < 3; i++){
                 pw.println("student "+i);
-             
+                pw.flush();
+             }
              socket.shutdownInput();//关闭输出流
               
              // 关闭资源
