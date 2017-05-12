@@ -40,9 +40,9 @@ import java.net.ServerSocket;
              OutputStream os = socket.getOutputStream();
              PrintWriter pw = new PrintWriter(os);
              pw.println("用户名:admin 密码:123");
-            // pw.flush();
+             pw.flush();
              pw.println("Y");
-            // pw.flush();
+             pw.flush();
              
              pw.println("3");
              pw.flush();
