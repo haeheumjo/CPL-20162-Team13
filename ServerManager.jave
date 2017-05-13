@@ -1,10 +1,6 @@
 package com.heyang;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
   
@@ -30,7 +26,12 @@ public class ServerManager {
         System.out.println("***服务器即将启动，等待客户端的连接***");
         Socket socket = null;
         while(true){
-            serverSocket.accept();// 就会处于阻塞的状态，等待监听 
+          try {
+			socket= serverSocket.accept();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}// 就会处于阻塞的状态，等待监听 
             ServerThread serverThread = new ServerThread(socket);
             serverThread.start();
             count++;
@@ -38,6 +39,5 @@ public class ServerManager {
             InetAddress address=socket.getInetAddress();
             System.out.println("当前客户端的IP："+address.getHostAddress());
         } 
-        serverSocket.close();
     }
  }
