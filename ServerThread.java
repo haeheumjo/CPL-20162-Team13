@@ -41,8 +41,6 @@ public class ServerThread extends Thread{
                         //received attendance status from DB
                         pw.println("Y");
                         pw.flush();
-             
-                        
                         break;
                     }
                     // RPI require the student list
@@ -74,6 +72,8 @@ public class ServerThread extends Thread{
                         socket.close(); 
                         return;
                     }
+                    default:
+                        break;
                 }
             }
              //System.out.println(br.readLine()); 
@@ -87,12 +87,13 @@ public class ServerThread extends Thread{
         if(cmd.compareTo("RPI_STATE") == 0){
             return 1;
         }
-        if(cmd.compareTo("RPI_STDLIST") == 0){
+        else if(cmd.compareTo("RPI_STDLIST") == 0){
             return 2;
         }
-        if(cmd.compareTo("RPI_ATDLIST") == 0){
+        else if(cmd.compareTo("RPI_ATDLIST") == 0){
             return 3;
         }
+        else
 		return 0;
     }
 }
