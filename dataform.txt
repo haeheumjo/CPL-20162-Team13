@@ -1,0 +1,11 @@
+RPI:
+command@scan time@class id@the list of std
+=
+RPI_ATDLIST@TIME@CLASS_ID@STDID1+STDID2+STDID3+STDID4
+
+
+SERV:
+CLASS_ID
+
+sequence
+SERV send class id ------> RPI
