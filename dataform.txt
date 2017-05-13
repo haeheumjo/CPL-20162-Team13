@@ -9,3 +9,9 @@ CLASS_ID
 
 sequence
 SERV send class id ------> RPI
+String[] commands = info.split("\\@");
+                scan_period = Long.valueOf(commands[1]);
+                String class_id = commands[2];
+                List<String> stdList = Arrays.asList(commands[3].split("\\+"));
+                for(String temp : stdList)
+                    Log.i(TAG,temp);
