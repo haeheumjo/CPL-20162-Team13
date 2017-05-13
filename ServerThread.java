@@ -1,3 +1,4 @@
+package com.heyang;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,10 @@ public class ServerThread extends Thread{
     }
     @Override
     public void run(){
-        InputStream is = socket.getInputStream();// 字节输入流
+        InputStream is;
+		try {
+			is = socket.getInputStream();
+		
              // 将字节流转换为字符流
              InputStreamReader isr = new InputStreamReader(is);
              // 为输入流添加缓冲
@@ -51,5 +55,11 @@ public class ServerThread extends Thread{
              isr.close();
              is.close();
              socket.close();
+             
+             
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}// 字节输入流
     }
 }
