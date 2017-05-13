@@ -10,21 +10,22 @@ import java.net.Socket;
   */
 public class ServerManager {
     private ServerSocket serverSocket;
-    private static final int PORT = 9999;
-    public ServerManager() {
-        try {
-             // 1、创建一个服务器Socket，即ServerSocket，指定绑定的端口，并监听此端口
-             serverSocket = new ServerSocket(PORT);
-        } catch (IOException e) {
-             // TODO Auto-generated catch block
-             e.printStackTrace();
-        }
-    }
+    private static final int PORT = 7777;
+    public ServerManager() {}
     public void start(){
         int count = 0;
         // 2、调用()方法开始监听，等待客户端的连接
         System.out.println("***服务器即将启动，等待客户端的连接***");
         Socket socket = null;
+        
+        
+        try {
+            // 1、创建一个服务器Socket，即ServerSocket，指定绑定的端口，并监听此端口
+            serverSocket = new ServerSocket(PORT);
+       } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+       }
         while(true){
           try {
 			socket= serverSocket.accept();
