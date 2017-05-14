@@ -10,8 +10,10 @@ import java.net.Socket;
 public class ServerThread extends Thread{
     Socket socket = null;
     private boolean flag = false;
+	private MDateClass mDT;
     public ServerThread(Socket socket){
         this.socket = socket;
+		mDT = new MDateClass();
     }
     @Override
     public void run(){
@@ -36,8 +38,8 @@ public class ServerThread extends Thread{
 				String[] commands= br.split("\\@");
                 switch(mCommand(commands[0])){
                     case 1:{
-						
                         //received attendance status from DB
+						String dateOfWeek = mDT.getDate();
 						String class_id;
 						String class_type;
 						int std_num;
