@@ -38,12 +38,18 @@ public class ServerThread extends Thread{
 				String[] commands= br.split("\\@");
                 switch(mCommand(commands[0])){
                     case 1:{
+						//commands = RPI_STATE@WHERE
                         //received attendance status from DB
-						String dateOfWeek = mDT.getDate();
-						String class_id;
-						String class_type;
-						int std_num;
+						String where = commands[1];
+						String[] strDate = mDT.getDate().split("\\@"); //strDate[0] = dayOfWeek, strDate[1] = HHMM;
+						String[] strHHMM = strDate[1].split("\\:"); //strHHMM[0] = hourOfDay, strHHMM[1] = minute;
+						String class_id; //gain from db;
+						String class_type; //gain from db;
+						int std_num; //gain from select sql;
 						List<String>std_list = new ArrayList<String>();
+						String sendMsg = class_type+"@"; //msg = class_type@class_id@std_1+std_2+std_3;
+						for(String tamp : std_list)
+							sendMsg = sendMsg + "+" + tamp;
                         pw.println("Y@class_id@std_1+std_2+std_3");
                         pw.flush();
                         break;
