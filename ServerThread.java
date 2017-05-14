@@ -28,18 +28,21 @@ public class ServerThread extends Thread{
             
             OutputStream os = socket.getOutputStream();
             PrintWriter pw = new PrintWriter(os);
-            
+            String class_id;
             while(true){
                 if((info = br.readLine())!=null){
                     System.out.println("我是服务器，读取客户端发过来的 command："+info);
                 }
-                switch(mCommand(info)){
+				String[] commands= br.split("\\@");
+                switch(mCommand(commands[0])){
                     case 1:{
-                        if((info = br.readLine())!=null){
-                            System.out.println("我是服务器，读取客户端发过来的信息："+info);
-                        }
+						
                         //received attendance status from DB
-                        pw.println("Y");
+						String class_id;
+						String class_type;
+						int std_num;
+						List<String>std_list = new ArrayList<String>();
+                        pw.println("Y@class_id@std_1+std_2+std_3");
                         pw.flush();
                         break;
                     }
@@ -57,7 +60,6 @@ public class ServerThread extends Thread{
                     }
                     // received the attendance list from RPI
                     case 3:{
-                        String strNum = null;
                         if((strNum = br.readLine())!=null){
                  	        int numOfAdc = Integer.valueOf(strNum);
        	                    for(int i = 0; i < numOfAdc; i++)
@@ -93,7 +95,9 @@ public class ServerThread extends Thread{
         else if(cmd.compareTo("RPI_ATDLIST") == 0){
             return 3;
         }
-        else
-		return 0;
+		else if(cmd.compareTo("RPI_CLOSE") == 0){
+			return 4;
+		}else
+			return 0;
     }
 }
