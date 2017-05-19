@@ -129,6 +129,7 @@ public class CommandsTest {
 		}
 		return stdList;
 	}
+	/***加入新教授**/
 	public boolean insertNewProfessor(String pid, String pName, String dept) throws SQLException{
 		PreparedStatement pst;
 		String table = "PROFESSOR";
@@ -144,6 +145,7 @@ public class CommandsTest {
 		pst.setString(3, dept);
 		return pst.execute();
 	}
+	/**创建新出勤表*/
 	private boolean insertNewRecord(String aStudent,String no) throws SQLException{
 		PreparedStatement pst;
 		String tempSql = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", 
@@ -157,17 +159,42 @@ public class CommandsTest {
 		pst.close();
 		return isTrue;
 	}
+	public static String createPart(String newStudentList){
+		List<String> studentList = Arrays.asList(newStudentList.split("\\+"));
+		String r = null;
+		for(String aStudent:studentList)
+			if(r == null)
+				r = String.format("('%s'",aStudent);
+			else{
+				r = r + String.format(",'%s'", aStudent);
+			}
+		r = r + ")";
+		return r;
+	}
+	/**检查更改出勤状态*/
 	public int updateNewRecord(String newStudentList) throws SQLException{
 		stmt = conn.createStatement();
 		String table = "R_001";
 		String col = "TYPE";
+		String type = "Y";
 		String where[] = {"S_ID","DATE"};
-		List<String> studentList = Arrays.asList(newStudentList.split("\\+"));
-		for(String aStudent : studentList){
-			String sql = String.format("UPDATE %s SET %s = '%s' WHERE %s = '%s' AND %s = '%s'", table, col,"Y", where[0], aStudent,where[1],MyDateClass.getYYYYMMDD());
-			boolean isFlase = stmt.execute(sql);
-			System.out.println(isFlase);
-		}
+		String sql = String.format("UPDATE %s SET %s = '%s' WHERE %s in %s AND %s = '%s'", table, col,type, where[0], createPart(newStudentList),where[1],MyDateClass.getYYYYMMDD());
+		boolean isFlase = stmt.execute(sql);
+		System.out.println(isFlase);
+
+		stmt.close();
+		return 1;
+	}
+	
+	public int updateRecordToAbsent(String newStudentList) throws SQLException{
+		stmt = conn.createStatement();
+		String table = "R_001";
+		String col = "TYPE";
+		String where[] = {"S_ID","DATE"};
+		String type = "absent";
+		String sql = String.format("UPDATE %s SET %s = '%s' WHERE %s in %s AND %s = '%s'", table, col,type, where[0], createPart(newStudentList),where[1],MyDateClass.getYYYYMMDD());
+		boolean isFlase = stmt.execute(sql);
+		System.out.println(isFlase);
 
 		stmt.close();
 		return 1;
