@@ -1,0 +1,306 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+public class CommandsTest {
+	private static final String[] ENROLLMENT_COL = {
+			"S_ID",
+			"C_ID",
+			"SESSION"
+	};
+	private static final String[] RECORD_COLUMNNAME={
+			"S_ID",
+			"DATE",
+			"TYPE"
+	};
+	private static final String[] ATTENDANCE_COLUMNNAME={
+			"C_ID",
+			"R_ID",
+			"SESSION"
+	};
+	private static final String[] CLASS_COLUMNNAME={
+			"C_ID",
+			"C_NAME",
+			"P_ID",
+			"CR_NO",
+			"SEESION",
+			"START",
+			"END",
+			"DAY",
+			"RPI_ADR"
+	};
+	private static final String[] SESSION_COLUMNNAME = {
+			"session",
+			"start",
+			"end"
+	};
+	final String driver ="org.mariadb.jdbc.Driver";
+	final String url = "jdbc:mariadb://127.0.0.1:3306/SAM_TEST";
+	String user = "root";
+	String pw = "root";
+	private Connection conn = null;
+	private Statement stmt = null;
+	private static final int STUDENT_ID_IN_CLASSID = 1;
+	
+	
+	
+	public CommandsTest(){
+		try {
+			Class.forName(driver);
+			System.out.println("connecting to db...");
+			conn = DriverManager.getConnection(url,user,pw);
+			System.out.println("connected");
+		} catch (ClassNotFoundException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+//	public static void main(String[] argv){
+//		getStudentList();
+//	}
+	public int addNewSession(String session,String start,String end) throws SQLException{
+		PreparedStatement pst;
+		String table = "SESSION";
+		String sql = String.format("INSERT INTO %s (%s,%s,%s) VALUES(?,?,?)", table, SESSION_COLUMNNAME[0],SESSION_COLUMNNAME[1],SESSION_COLUMNNAME[2]);
+		pst = conn.prepareStatement(sql);
+		pst.setString(1, session);
+		pst.setString(2, start);
+		pst.setString(3, end);
+		boolean isFalse = pst.execute();
+		System.out.println(isFalse);
+		pst.close();
+		if(isFalse)
+			return -1;
+		return 0;
+	}
+	/*****
+	 * usage: addNewCol("R_001", "20171011", "present");
+	 * @param rid
+	 * @param date
+	 * @param type
+	 * @param defult
+	 * @throws SQLException
+	 */
+	//get the session
+	public String getSession() throws SQLException{
+		stmt = conn.createStatement();
+		String table = "SESSION";
+		String target = "SESSION";
+		String date = MyDateClass.getYYYYMMDD();
+		String sql = String.format("SELECT %s FROM %s WHERE %s <= '%s' AND %s >= '%s'",
+				table, target, SESSION_COLUMNNAME[1], date, SESSION_COLUMNNAME[2], date);
+		ResultSet rs = stmt.executeQuery(sql);
+		String session = null;
+		while(rs.next())
+			session = rs.getString(1);
+		return session;
+	}
+	//student part
+	public String getClassList(String sid) throws SQLException{
+		stmt = conn.createStatement();
+		String table = "enrollment";
+		String column = "C_ID";
+		String sql = String.format("SELECT %s FROM %s WHERE %s = '%s' AND %s = '%s'"
+				,column,table,ENROLLMENT_COL[0], sid, ENROLLMENT_COL[2], getSession());
+		ResultSet rs = stmt.executeQuery(sql);
+		String classList = null;
+		while(rs.next()){
+			if(classList == null)
+				classList = rs.getString(1);
+			else{
+				classList = String.format("%s+%s", classList, rs.getString(1));
+			}
+		}
+		return classList;
+	}
+	public void addNewCol(String rid, String date,String type, String defult) throws SQLException{
+		stmt = conn.createStatement();
+		ResultSet rs = null;
+		String sql = null;
+		if(defult != null)
+		sql = String.format("ALTER TABLE %s ADD %s %s not null default '%s'"
+				,rid,date,type,defult);
+		System.out.println(sql);
+		int i = stmt.executeUpdate(sql);
+		stmt.close();
+		System.out.println(i);
+	}
+	public String getCid(String pid)throws SQLException{
+		stmt = conn.createStatement();
+		String table = "COURSE";
+		String now =  MyDateClass.getHHMM();
+		String cid = null;
+		String day = MyDateClass.getDayOfWeek();
+		String getCidSql = String.format("SELECT %s FROM %s WHERE %s='%s' AND %s='%s' AND %s<='%s' AND %s>='%s'", 
+				CLASS_COLUMNNAME[0], table, CLASS_COLUMNNAME[2],pid, CLASS_COLUMNNAME[7], MyDateClass.getDayOfWeek(), CLASS_COLUMNNAME[5], now, CLASS_COLUMNNAME[6], now);
+		ResultSet rs = stmt.executeQuery(getCidSql);
+		while(rs.next())
+			cid = rs.getString(1);
+		stmt.close();
+		rs.close();
+		return cid;
+	}
+	/***获取出勤表编号
+	 * get
+	 * @param pid
+	 * @return
+	 * @throws SQLException
+	 */
+	public String getRecordNo(String cid,String session) throws SQLException{
+		String table = "ATTENDANCE";
+		String now =  MyDateClass.getHHMM();
+		String rid = null;
+		stmt = conn.createStatement();
+		System.out.println(cid);
+		String getRidSql = String.format("SELECT %s FROM %s WHERE %s='%s' %s = '%s'", 
+				ATTENDANCE_COLUMNNAME[1], table, ATTENDANCE_COLUMNNAME[0],cid,ATTENDANCE_COLUMNNAME[2],session);
+		ResultSet rs = stmt.executeQuery(getRidSql);
+		while(rs.next())
+			rid = rs.getString(1);
+		rs.close();
+		stmt.close();
+		return rid;
+	}
+	public String getStudentList(String pid){
+		if(conn == null){
+			return "2014015036";
+		}
+		String stdList = null;
+		ResultSet rs = null;
+		String attandenceNo = null;
+		Calendar cal = Calendar.getInstance();
+        Date dt=new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String fort = sdf.format(dt);
+		/***********
+		 * 1.根据日期查找从course表中查找C_ID
+		 * 2.根据C_ID从attendance表中寻找R_ID
+		 * 3.从相应的R_ID中提取学生表
+		 * 3.1 并且在每次提取中插入新的日期状态。
+		 * **************/
+		
+		/*****3.从相应的R_ID中提取学生表******/
+		try {
+			stmt = conn.createStatement();
+			attandenceNo = getRecordNo(pid);
+			String adtSql = String.format("SELECT DISTINCT %s from %s",RECORD_COLUMNNAME[0],attandenceNo);
+			System.out.println(adtSql);
+			rs = stmt.executeQuery(adtSql);
+			while(rs.next()){
+				String temp = null;
+				if(stdList == null){
+					stdList = rs.getString(RECORD_COLUMNNAME[0]);
+					temp = stdList;
+				}
+				else{
+					temp = rs.getString(RECORD_COLUMNNAME[0]);
+					stdList = stdList + "+" + temp;
+				}
+				/***3.1***/
+				insertNewRecord(temp,attandenceNo);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(stdList);
+		try {
+			stmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return stdList;
+	}
+	/***加入新教授**/
+	public boolean insertNewProfessor(String pid, String pName, String dept) throws SQLException{
+		PreparedStatement pst;
+		String table = "PROFESSOR";
+		final String[] professorCol = {
+				"P_ID",
+				"P_NAME",
+				"DEPT"
+		};
+		String tempSql = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", table, professorCol[0],professorCol[1],professorCol[2]);
+		pst = conn.prepareStatement(tempSql);
+		pst.setString(1,pid);
+		pst.setString(2, pName);
+		pst.setString(3, dept);
+		return pst.execute();
+	}
+	/**创建新出勤表*/
+	private boolean insertNewRecord(String aStudent,String no) throws SQLException{
+		PreparedStatement pst;
+		String tempSql = String.format("INSERT INTO %s (%s, %s, %s) VALUES (?, ?, ?)", 
+				no, RECORD_COLUMNNAME[0], RECORD_COLUMNNAME[1], RECORD_COLUMNNAME[2]);
+		pst = conn.prepareStatement(tempSql);
+		pst.setString(1, aStudent);
+		pst.setString(2, MyDateClass.getYYYYMMDD());
+		pst.setString(3, "absent");
+		boolean isTrue = pst.execute();
+		System.out.println(isTrue);
+		pst.close();
+		return isTrue;
+	}
+	public static String createPart(String newStudentList){
+		List<String> studentList = Arrays.asList(newStudentList.split("\\+"));
+		String r = null;
+		for(String aStudent:studentList)
+			if(r == null)
+				r = String.format("('%s'",aStudent);
+			else{
+				r = r + String.format(",'%s'", aStudent);
+			}
+		r = r + ")";
+		return r;
+	}
+	/**检查更改状态为出勤*/
+	public int updateRecordAsAttend(String newStudentList) throws SQLException{
+		stmt = conn.createStatement();
+		String table = "R_001";
+		String col = "TYPE";
+		String type = "Y";
+		String where[] = {"S_ID","DATE"};
+		String sql = String.format("UPDATE %s SET %s = '%s' WHERE %s in %s AND %s = '%s'", table, col,type, where[0], createPart(newStudentList),where[1],MyDateClass.getYYYYMMDD());
+		boolean isFalse = stmt.execute(sql);
+		System.out.println(isFalse);
+		stmt.close();
+		if(isFalse)
+			return -1;
+		return 0;
+	}
+	
+	public int updateRecordToAbsent(String newStudentList) throws SQLException{
+		stmt = conn.createStatement();
+		String table = "R_001";
+		String col = "TYPE";
+		String where[] = {"S_ID","DATE"};
+		String type = "absent";
+		String sql = String.format("UPDATE %s SET %s = '%s' WHERE %s in %s AND %s = '%s'", table, col,type, where[0], createPart(newStudentList),where[1],MyDateClass.getYYYYMMDD());
+		boolean isFlase = stmt.execute(sql);
+		System.out.println(isFlase);
+
+		stmt.close();
+		return 1;
+	}
+	public void close(){
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+}
