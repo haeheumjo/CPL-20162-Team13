@@ -1,0 +1,9 @@
+table=course
+col1=C_ID
+col2=C_NAME
+col3=P_ID
+col4=CR_NO
+col5=SESSION
+col6=START
+col7=END
+col8=DAY

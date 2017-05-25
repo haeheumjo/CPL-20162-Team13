@@ -1,0 +1,101 @@
+/*
+index.jsp页面css
+*/
+
+.container {
+	width: 600px;
+	height: 400px;
+	margin: 200px auto;
+	color: #33833c;
+	border:1px solid #cccccc;
+	border-radius:10px;
+	}
+.container h1{
+	text-align: center;
+	margin-top: 50px;
+}
+.container input {
+	height: 30px;
+	width: 300px;
+	border-radius: 5px;
+	margin-left: 20px;
+	margin-bottom: 20px;
+    
+}
+
+.container input[type="submit"]{
+	background-color: #FFFFFF;
+	margin-left: 100px;
+	color:#53b572;
+	font-size: 16px;
+}
+
+.login{
+	margin: 60px  auto;
+	margin-left: 100px;
+}
+
+
+/*
+
+ 选择菜单css
+*/
+.menu_ul{
+	list-style: none;
+}
+.menu_ul li{
+	height: 30px;
+}
+
+.menu_ul li a:link,.menu_ul li a:visited{
+	color:#1d99f6;
+	text-decoration: none;
+}
+
+.menu_ul li a:active,.menu_ul li a:hover{
+	color:#53b572;
+}
+/*
+addstu.jsp增加学生信息页面css
+*/
+.stu_title{
+	color:#33833c;
+	text-align: center;
+}
+
+.add_info{
+	background-color: #ff0000;
+	width:300px;
+	padding-right: 100px; 
+}
+.add_stu  td{
+	height:50px;
+	color:#33833c;
+}
+.add_stu input{
+	width:300px;
+	height:30px;
+	border-radius:10px;
+	background-color: transparent;
+	
+}
+
+input.short_input{
+	width:40px;
+	height:20px;
+}
+
+.showstu table{
+  border-collapse:collapse;
+  
+}	
+.showstu table, .showstu tr,.showstu td{
+	
+	border:1px solid #cccccc;
+	
+}
+
+.showstu td{
+	height:40px;
+	width:80px;
+}

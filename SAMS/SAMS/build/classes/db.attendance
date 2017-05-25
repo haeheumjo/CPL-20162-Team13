@@ -1,0 +1,4 @@
+table=attendance
+col1=C_ID
+col2=R_ID
+col3=SESSION

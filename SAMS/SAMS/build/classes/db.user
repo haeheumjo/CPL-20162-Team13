@@ -1,0 +1,4 @@
+table=user
+col1=id
+col2=pw
+col3=position

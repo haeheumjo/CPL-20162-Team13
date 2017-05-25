@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>Kyungpook National University</title>
+<link rel="stylesheet" type="text/css" href="css/login.css" />
+</head>
+<body>
+	<div id="login">
+		<h1>Kyungpook National University</h1>
+		<form>
+			<input type="text" required="required" id="id" placeholder="ID"></input>
+			<input type="password" required="required" id="pw" placeholder="PW"></input>
+			<button type="button" id='add' class="but">Login</button>
+		</form>
+	</div>
+</body>
+</html>
+
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery.form.js"></script>
+<script>
+	$(function() {
+		function ajax(p) {
+			console.log("url = " + p.url);
+			var xhr = new XMLHttpRequest(), pr = [];
+			p = p || {};
+			if (p.params) {
+				for ( var key in p.params) {
+					pr.push(key + "=" + p.params[key]);
+				}
+				pr = pr.join("&");
+			}
+			pr = pr || "";
+			p.method = p.method || "GET";
+
+			if (p.method == "GET") {
+				if (pr) {
+					p.url = [ p.url, pr ].join(p.url.indexOf("?") > -1 ? "&"
+							: "?");
+				}
+			}
+
+			xhr.onreadystatechange = p.onload;
+			xhr.open(p.method, p.url, p.async);
+			xhr.setRequestHeader("Content-type",
+					"application/x-www-form-urlencoded; charset=UTF-8");
+			xhr.send(p.method == "POST" ? pr : "");
+		}
+
+		$('#add').click(function() {
+			var id = document.getElementById("id").value;
+			var pw = document.getElementById("pw").value;
+			var log = new Object();
+			log.id = id;
+			log.pw = pw;
+			var data = JSON.stringify(log);
+			$.ajax({
+				type : "POST",
+				url : "http://localhost:8080/SAMS/group/login",
+				//url: "http://localhost:8080/SAMS",  
+				//data : data,
+				data : data,
+				cache : true,
+				success : function(d) {
+					if (d == "p") {
+						window.location.href = "main.jsp";
+					}
+					if (d == "a") {
+						window.location.href = "management.jsp";
+
+					}
+
+					//window.open('http://www.google.com');
+
+				},
+				error : function(e) {
+					//alert("error!");
+					window.location.href = "fail.jsp";
+					//window.open('http://www.baidu.com');
+				}
+			});
+
+		});
+
+	});
+	
+</script>
