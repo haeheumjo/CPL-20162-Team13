@@ -86,7 +86,7 @@ input {
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.form.js"></script>
 <script>
-	/*$.ajax({  
+	$.ajax({  
     	type: "GET", 
     	url: "http://localhost:8080/SAMS/entry/attencecheck/button",  
     	cache: true, 
@@ -94,7 +94,7 @@ input {
     		var Btn1 = document.getElementsByTagName('input')[0];
 			Btn1.value = d;
     	}
-    });*/
+    });
 	$(function() {
 		function ajax(p) {
 			console.log("url = " + p.url);

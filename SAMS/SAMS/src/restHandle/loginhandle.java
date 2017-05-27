@@ -85,7 +85,7 @@ public class loginhandle {
 				System.out.println("session : "+pid);
 				if(!ClientManager.start(ip,rid))
 					return Response.ok().status(400).build();
-				//session.setAttribute("attenceStatus", "stop");
+				session.setAttribute("attenceStatus", "stop");
 			}
 			return Response.ok().status(200).build();
 		}else if (info.equals("stop socket!")) {
@@ -102,7 +102,7 @@ public class loginhandle {
 				if(!ClientManager.stop(ip))
 					return Response.ok().status(400).build();
 			}
-			//session.setAttribute("attenceStatus", "start");
+			session.setAttribute("attenceStatus", "start");
 			return Response.ok().status(200).build();
 		} else {
 			return Response.ok().status(400).build();
