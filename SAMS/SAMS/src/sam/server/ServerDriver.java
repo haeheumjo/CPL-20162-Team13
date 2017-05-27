@@ -7,9 +7,9 @@ import database.CommandsTest;
 import database.Record;
 
 public class ServerDriver {
-//	public static void main(String[] args){
-//		System.out.println(CommandsTest.getCid("P001"));
-//	}
+	public static void main(String[] args){
+		staticThread();
+	}
 	public static void staticThread(){
 		StudentServer ss = new StudentServer();
 		BindServer bs = new BindServer();

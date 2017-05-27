@@ -3,6 +3,7 @@
 	pageEncoding="utf-8"%>
 <html>
 <head>
+<meta http-equiv="refresh" content="3">
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no" />
@@ -116,6 +117,62 @@ a {
 
 
 <title>Kyungpook National University</title>
+<script src="/js/jquery-1.8.2.min.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/jquery.form.js"></script>
+	<script src="http://code.jquery.com/jquery-latest.min.js"
+		type="text/javascript"></script>
+	<script type="text/javascript"> 
+//	$(function () {  
+//        setInterval("SetAtd()", 3000); //每隔5秒刷新点击量  
+//    });
+//	function SetAtd() {
+/*		$.ajax({  
+		     type: "GET", 
+		     url: "http://localhost:8080/SAMS/entry/attencecheck/all",  
+		     cache: true, 
+		     success: function(d){                    
+		    	var s=d.indexOf("[");
+		     	var e=d.indexOf("]");
+		     	var hao=d.substring(s,e+1); 
+		     	var objects=eval(hao);
+		                      //1,获取上面id为cloneTr的tr元素  
+		                          var tr = $("#cloneTr");  
+		                       $.each(objects, function(index,item){                              
+		                             //克隆tr，每次遍历都可以产生新的tr                              
+		                               var clonedTr = tr.clone();  
+		                               var _index = index;  
+		                              
+		                               //循环遍历cloneTr的每一个td元素，并赋值  
+		                               clonedTr.children("td").each(function(inner_index){  
+		                                  
+		                                      //根据索引为每一个td赋值  
+		                                            switch(inner_index){  
+		                                                  case(0):   
+		                                                     $(this).html(item.name);  
+		                                                     break;  
+		                                                  case(1):  
+		                                                     $(this).html(item.id);  
+		                                                     break;  
+		                                                 case(2):  
+		                                                     $(this).html(item.type);  
+		                                                     break;  
+		                                                
+		                                                 
+		                                
+		                                           }//end switch                          
+		                            });//end children.each  
+		                          
+		                           //把克隆好的tr追加原来的tr后面  
+		                           clonedTr.insertAfter(tr);  
+		                        });//end $each  
+		                        $("#cloneTr").hide();//隐藏id=clone的tr，因为该tr中的td没有数据，不隐藏起来会在生成的table第一行显示一个空行  
+		                        $("#generatedTable").show();  
+		         }//end success  
+		    });   
+///	};*/
+    </script>
+
 </head>
 <body>
 
@@ -128,7 +185,7 @@ a {
 	<br>
 	<div align="center">
 		<table id="generatedTable" class="imagetable" width="100%"
-			height="100%" style="" 1" bordercolor="red" align="center" display:none;">
+			height="100%" style="" bordercolor="red" align="center" display:none;">
 			<thead>
 				<tr align="center">
 					<th><b>NAME</b></th>
@@ -152,19 +209,13 @@ a {
 	</div>
 
 	<br>
-	<div align="center">
-		<a class="button2" href="http://localhost:8080/SAMS/main.jsp">메인으로</a>
-	</div>
-</center>
-	<script type="text/javascript" src="js/jquery.min.js"></script>
-	<script type="text/javascript" src="js/jquery.form.js"></script>
-	<script src="http://code.jquery.com/jquery-latest.min.js"
-		type="text/javascript"></script>
-	<script>
+	</center>
+<script>
+
  $.ajax({  
      type: "GET",  
      url: "http://localhost:8080/SAMS/entry/attencecheck/all",  
-     cache: true,  
+     cache: true, 
      success: function(d){                    
     	var s=d.indexOf("[");
      	var e=d.indexOf("]");
@@ -207,5 +258,6 @@ a {
          }//end success  
     });   
     </script>
+  	  
 </body>
 </html>

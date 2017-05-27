@@ -53,11 +53,18 @@ public class ClientThread implements Runnable {
 			System.out.println("reading...");
 			while((info = br.readLine())!=null){
 				System.out.println(info);
+				//String studentid = info.split("\\+")[0];
+				//String answer = info.split("\\+")[1];
+				
 				if(stdList.contains(info)){
+			    //if(stdList.contains(studentid)){
+	
+					//stdList.remove(studentid);
 					stdList.remove(info);
 					try {
 						System.out.println(stdList);
 						commandsTest.updateRecordAsAttend(info,rid,"attend");
+						//commandsTest.updateRecordAsAttend(info,studentid,answer);
 					} catch (SQLException e) {
 					// TODO Auto-generated catch block
 						e.printStackTrace();

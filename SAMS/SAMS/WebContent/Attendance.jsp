@@ -29,15 +29,11 @@ input {
 </head>
 <body>
 	<center>
-		<br> <br> <br> <br> <br> <br> <br>
 		<div>
-			<h1>00:00:00:000</h1>
 		</div>
-		<br>
-		<br>
-		<input type="button" value="start" class="but" id='add' />
-		<br> 
-		<br>
+		<div>
+			<input type="button" value="start" class="but" id='add' />
+		</div>
 	</center>
 </body>
 
@@ -90,8 +86,16 @@ input {
 <script type="text/javascript" src="js/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.form.js"></script>
 <script>
+	/*$.ajax({  
+    	type: "GET", 
+    	url: "http://localhost:8080/SAMS/entry/attencecheck/button",  
+    	cache: true, 
+    	success: function(d){
+    		var Btn1 = document.getElementsByTagName('input')[0];
+			Btn1.value = d;
+    	}
+    });*/
 	$(function() {
-
 		function ajax(p) {
 			console.log("url = " + p.url);
 			var xhr = new XMLHttpRequest(), pr = [];
@@ -120,12 +124,7 @@ input {
 		}
 
 		$('#add').click(function() {
-			var oDiv = document.getElementsByTagName('div')[0];
 			var Btn2 = document.getElementsByTagName('input')[1];
-			var ms = 0;
-			var sec = 0;
-			var min = 0;
-			var hour = 0;
 			var Btn1 = document.getElementsByTagName('input')[0];
 			if (Btn1.value == "start") {
 				var data = "start socket!";
@@ -137,35 +136,6 @@ input {
 					cache : true,
 					success : function(d) {
 						alert("已经开启socket功能可以出席");
-						timer = setInterval(function() {
-							var str_hour = hour;
-							var str_min = min;
-							var str_sec = sec;
-							if (hour < 10) {
-								str_hour = "0" + hour;
-							}
-							if (min < 10) {
-								str_min = "0" + min;
-							}
-							if (sec < 10) {
-								str_sec = "0" + sec;
-							}
-							var time = str_hour + ':' + str_min + ':' + str_sec + ':' + ms;
-							oDiv.innerHTML = "<h1>" + time + "</h1>";
-							ms = ms + 50;
-							if (ms > 999) {
-								ms = 0;
-								sec++;
-							}
-							if (sec > 59) {
-								sec = 0;
-								min++;
-							}
-							if (min > 59) {
-								min = 0;
-								hour++;
-							}
-						}, 50);
 						Btn1.value = "stop";
 					},
 					error : function(e) {
@@ -183,10 +153,9 @@ input {
 					cache : true,
 					success : function(d) {
 						alert("已经关闭树莓派功能停止出席");
-						clearInterval(timer);
+						//clearInterval(timer);
 						Btn1.value = "start";
 						window.location.href = "AttendanceCheck.jsp";
-
 					},
 					error : function(e) {
 						alert("出席socket关闭失败请检查你的代码和树莓派");

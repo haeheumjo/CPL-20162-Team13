@@ -85,6 +85,7 @@ public class loginhandle {
 				System.out.println("session : "+pid);
 				if(!ClientManager.start(ip,rid))
 					return Response.ok().status(400).build();
+				//session.setAttribute("attenceStatus", "stop");
 			}
 			return Response.ok().status(200).build();
 		}else if (info.equals("stop socket!")) {
@@ -101,12 +102,57 @@ public class loginhandle {
 				if(!ClientManager.stop(ip))
 					return Response.ok().status(400).build();
 			}
+			//session.setAttribute("attenceStatus", "start");
 			return Response.ok().status(200).build();
 		} else {
 			return Response.ok().status(400).build();
 		}
 	}
+	@POST
+	@Path("/rpi/check")
+	public Response checkstart(String info, @Context HttpServletRequest request)
+			throws SQLException, IOException, PropertyVetoException {
+		System.out.println(info);
+		if (info.equals("start check!")) {
+			HttpSession session = request.getSession();
+			String pid = (String)session.getAttribute("pid");
+			if(pid == null || pid.equals("")){
+				System.out.println("He He !");
+				return Response.ok().status(400).build();
+			}
+			else{
+				CommandsTest test = new CommandsTest();
+				String cid = test.getCid(pid);
+				if(cid == null || cid.equals(""))
+					return Response.ok().status(400).build();
+				System.out.println("cid: "+cid);
+				String ss = test.getSession();
+				if(ss == null || ss.equals(""))
+					return Response.ok().status(400).build();
+				String rid = test.getRecordNo(cid, ss);
+				if(rid == null || rid.equals(""))
+					return Response.ok().status(400).build();
+				String cr_id = test.getClassRoomNoByPid(pid);
+				if(cr_id == null || cr_id.equals(""))
+					return Response.ok().status(400).build();
+				String ip = test.getIpAddress(cr_id);
+				if(ip == null || ip.equals(""))
+					return Response.ok().status(400).build();
+				session.setAttribute("rid", rid);
+				session.setAttribute("ss", ss);
+				session.setAttribute("ip", ip);
+				System.out.println("saved rid : "+rid);
 
+				System.out.println("saved ip : "+ip);
+				System.out.println("saved ss : "+ss);
+				test.close();
+				System.out.println("session : "+pid);
+			}
+			return Response.ok().status(200).build();
+		} else {
+			return Response.ok().status(400).build();
+		}
+	}
 	@PUT
 	@Path("entry")
 	public Response pushusertblput(String info, @Context HttpServletRequest request) throws SQLException {
